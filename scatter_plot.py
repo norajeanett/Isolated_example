@@ -77,7 +77,7 @@ class ScatterPlotter(Plotter):
         )
         line_df = pd.DataFrame({"x": [min_val, max_val], "y": [min_val, max_val]})
 
-        # --- Points layer (predictions) ---
+        # Points layer (predictions) 
         points = (
             alt.Chart(merged)
             # Add a constant 'kind' field so we can use it in the shared legend
@@ -100,7 +100,7 @@ class ScatterPlotter(Plotter):
             .properties(width=600, height=450)
         )
 
-        # --- Diagonal 45° reference line layer ---
+        #   reference line layer 
         diagonal = (
             alt.Chart(line_df)
             .transform_calculate(kind='"45° reference"')
@@ -121,7 +121,7 @@ class ScatterPlotter(Plotter):
 
         # Combine both layers + configure title, legend, axes
         chart = (points + diagonal).properties(
-            title="ALTIR SCATTER – Truth vs Prediction",
+            title=" Truth vs Prediction",
         ).configure_title(
             fontSize=20,
             font="Arial",

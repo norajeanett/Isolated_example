@@ -121,92 +121,98 @@ pip install pandas altair vega_datasets
 This modular structure makes it easy to add new visualizations without changing any core logic.
 
 
-
 # Scatter Plot (Truth vs Prediction)
 
-Fil: scatter_plot.py
-Output: scatter.png
+File: scatter_plot.py
+Output: output/scatter.png
 
-Viser:
+What it shows
 
-Hver prikk er ett datapunkt
-→ observed (disease_cases) på x-aksen
-→ predicted (forecast) på y-aksen
+Each point is one data item:
 
-➖ Sort stiplet referanselinje:
-Representerer perfekte prediksjoner (truth = forecast)
+- x-axis: observed values (disease_cases)
 
-Brukes for å vurdere nøyaktighet:
+- y-axis: predicted values (forecast)
 
-- Prikker langs linjen → god prediksjon
+The black dashed reference line represents perfect predictions (truth = forecast).
 
-- Prikker over linjen → modellen overvurderer
+How to interpret it
 
-- Prikker under linjen → modellen undervurderer
+- Points on the line → good predictions
 
-Hvorfor denne grafen er nyttig:
+- Points above the line → the model over-predicts
 
-- Rask visuell sjekk av modellens presisjon
+- Points below the line → the model under-predicts
 
-- Enkel å sammenligne modeller
+Why this plot is useful
 
-Typisk standard-graf i prediksjonsanalyse
+- Quick visual check of the model’s accuracy
 
+- Easy to compare different models
 
-# 2. Outbreak & Probability Plot (PI, Threshold, P(exceed))
-
-Fil: outbreak_plot.py
-Output: outbreak_prob.png
-
-Dette er en epidemiologisk tidsserie-graf inspirert av CHAP/Shiny.
-
-Viser fire ting samtidig:
-## 1. 95 % Prediksjonsintervall (PI-band)
-
-- Grått bånd
-
-- Viser usikkerheten i modellens prediksjon
-
-- Nedre og øvre konfidensgrenser (2.5% og 97.5%)
+- A standard plot in predictive modelling and forecasting
 
 
-## 2. Prediksjonsmean (Prediction)
+# Metric
 
-- Oransje linje med punkter
+# Outbreak & Probability Plot (PI, Threshold, P(exceed))
 
-- Gjennomsnittlig forecast for perioden
+File: outbreak_plot.py
+Output: output/outbreak_prob.png
 
+This is an epidemiological time-series plot inspired by the CHAP/Shiny visualizations.
+
+It shows four things at the same time:
+
+## 1. 95% Prediction Interval (PI band)
+
+Shown as a grey band
+
+Represents the uncertainty in the model’s prediction
+
+Bounded by the 2.5% and 97.5% quantiles of the forecast distribution
+
+## 2. Prediction Mean
+
+- Shown as an orange line with points
+
+. The average predicted value for each time period
 
 ## 3. Threshold (MA + 2 SD)
 
-- Lilla stiplet linje
+- Shown as a purple dashed line
 
-- Beregnes slik:
+- Computed as:
 
-        rolling mean (MA) av observed over flere uker
+        a rolling mean (MA) of the observed values over several weeks
 
-        2 × standardavvik
+        plus 2 × standard deviation
 
-- Brukes til å oppdage unormale økninger i smitten
-→ “Potensielt utbrudd!”
+- Used to detect unusual increases in cases
+    → potential outbreak signal
 
 ## 4. P(exceed) – Probability of Exceedance
 
-Grønn linje (egen høyre y-akse)
+- Shown as a green line on a separate right-hand y-axis
 
-Sannsynlighet for at forecast > threshold
+- The probability that forecast > threshold
+    (i.e. the probability that the next value will exceed the threshold)
 
-Dette er et mål på risiko for utbrudd
-
-
-Dette er to helt forskjellige typer grafer:
-
-Scatter = modellens nøyaktighet -> (“Hvor godt predikerte modellen tallene?”)
-
-Outbreak = risiko og overvåkning -> (“Oppstår det et mulig smitteutbrudd?”)
+- Interpreted as a measure of outbreak risk
 
 
-Lage nye visualiseringer skal være enkelt. 
+
+
+Intuition
+
+Scatter plot = model accuracy
+    → “How well does the model predict the numbers?”
+
+Outbreak plot = risk and surveillance
+    → “Is there a potential disease outbreak?”
+
+The code is structured so that adding new visualizations should be easy:
+    you can plug in new plotter classes alongside the existing ScatterPlotter and OutbreakProbPlotter without changing the rest of the pipeline.
 
 ## Some background on evaluation metrics
 
