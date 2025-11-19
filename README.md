@@ -153,7 +153,57 @@ Why this plot is useful
 - A standard plot in predictive modelling and forecasting
 
 
-# Metric
+# Metric: Example Absolute Error
+Files:
+    isolated_asses.py
+    example_metric.py
+
+
+This project also includes an example of a custom evaluation metric that can be used both standalone (outside CHAP) and as a CHAP-compatible metric.
+
+What the metric computes:
+    The metric is an absolute error per location and time_period:
+metric=∣forecast−disease_cases∣\text{metric} = | \text{forecast} - \text{disease\_cases} |metric=∣forecast−disease_cases∣
+
+Given the two flat dataframes:
+
+- forecasts
+    columns: location, time_period, horizon_distance, sample, forecast
+
+
+- observations
+    columns: location, time_period, disease_cases
+
+
+
+
+The metric is computed by:
+1. Merging forecasts and observations on location and time_period.
+2. Taking the absolute difference between forecast and disease_cases.
+3. Returning a dataframe with:
+    location, time_period, metric
+
+In isolated_asses.py this logic is implemented as a simple function my_metric(...) that operates directly on pandas DataFrames.
+
+In example_metric.py the same idea is implemented as a CHAP-compatible class ExampleMetric, which:
+- subclasses MetricBase
+- defines a MetricSpec with:
+    - output_dimensions = (time_period, location)
+    - a metric id and a human-readable name
+- implements compute(observations, forecasts) and returns a dataframe with the required columns.
+
+
+Why this metric is useful
+- It gives a simple, interpretable measure of model error at the same granularity as the data (per location and time period).
+- It is easy to inspect and debug, both in the standalone version (isolated_asses.py) and via the CHAP-compatible ExampleMetric.
+- It serves as a template for implementing more advanced metrics that follow the same pattern:
+    - define a flat input format (forecasts + observations)
+    - compute the metric in a reproducible way
+    - expose the metric through a clear specification (MetricSpec) so that CHAP can validate and use it.
+
+
+
+
 
 # Outbreak & Probability Plot (PI, Threshold, P(exceed))
 
@@ -213,6 +263,17 @@ Outbreak plot = risk and surveillance
 
 The code is structured so that adding new visualizations should be easy:
     you can plug in new plotter classes alongside the existing ScatterPlotter and OutbreakProbPlotter without changing the rest of the pipeline.
+
+
+Utvikling: 
+
+- Heatmap av feil per uke per location
+
+- Plot av prediction interval width over tid
+
+- Rolling absolute error
+
+- Residual plot (observed - predicted)
 
 ## Some background on evaluation metrics
 
