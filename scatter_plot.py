@@ -4,7 +4,7 @@ Altair-based scatter plot:
     - x-axis: observed disease cases
     - y-axis: predicted disease cases
     - points: forecasts
-    - dashed line: 45-degree reference (perfect prediction)
+    - dashed line: reference line (perfect prediction)
 
 Implemented as a Plotter subclass so it fits into a modular design.
 """
@@ -27,7 +27,7 @@ LINE_COLOR: Final[str] = "#000000"    # black
 
 class ScatterPlotter(Plotter):
     """
-    Truth vs Prediction scatter plot with a 45° reference line.
+    Truth vs Prediction scatter plot with a reference line.
 
     This class implements the Plotter interface and can be plugged into
     any driver that expects Plotter instances (e.g. isolated_run.py).
@@ -91,7 +91,7 @@ class ScatterPlotter(Plotter):
                     "kind:N",
                     title="Legend",
                     scale=alt.Scale(
-                        domain=["Prediction", "45° reference"],
+                        domain=["Prediction", "reference"],
                         range=[POINT_COLOR, LINE_COLOR],
                     ),
                 ),
@@ -103,7 +103,7 @@ class ScatterPlotter(Plotter):
         #   reference line layer 
         diagonal = (
             alt.Chart(line_df)
-            .transform_calculate(kind='"45° reference"')
+            .transform_calculate(kind='"reference"')
             .mark_line(strokeDash=[4, 3], strokeWidth=2)
             .encode(
                 x="x:Q",
@@ -112,7 +112,7 @@ class ScatterPlotter(Plotter):
                     "kind:N",
                     title="Legend",
                     scale=alt.Scale(
-                        domain=["Prediction", "45° reference"],
+                        domain=["Prediction", "reference"],
                         range=[POINT_COLOR, LINE_COLOR],
                     ),
                 ),
